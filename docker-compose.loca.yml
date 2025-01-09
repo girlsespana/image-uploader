@@ -1,0 +1,4 @@
+networks:
+  default:
+    name: api_default
+    external: true

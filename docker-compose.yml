@@ -1,0 +1,11 @@
+services:
+  image-uploader:
+    build: .
+    command: sh server.sh
+    container_name: girlsespana_image_uploader_api
+    env_file:
+      - .env
+    ports:
+      - 8010:8000
+    volumes:
+      - .:/app
