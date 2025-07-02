@@ -50,7 +50,7 @@ async def upload_image(
         image: UploadFile,
         Authorization: str = Header(...),
 ):
-    allowed_extensions = ["jpg", "jpeg", "png"]
+    allowed_extensions = ["jpg", "jpeg", "png", "mp4"]
     ext = image.filename.split(".")[-1]
 
     try:
