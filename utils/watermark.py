@@ -62,7 +62,7 @@ def apply_watermark(image_path: str) -> str:
             (padding, padding),
             WATERMARK_TEXT,
             font=font,
-            fill=(0, 0, 0, 35)
+            fill=(0, 0, 0, 30)
         )
 
         # Rotate 45 degrees
