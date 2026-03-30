@@ -9,6 +9,7 @@ import requests
 
 from aws.s3 import S3FileUploader, S3UploaderError
 from utils.files import sanitize_filename
+from utils.watermark import apply_watermark
 
 app = FastAPI()
 
@@ -69,6 +70,10 @@ async def upload_image(
 
     with open(temp_file_path, "wb+") as buffer:
         buffer.write(image.file.read())
+
+    # Apply watermark to images only (not videos)
+    if ext in ["jpg", "jpeg", "png"]:
+        apply_watermark(temp_file_path)
 
     try:
         upload = S3FileUploader(temp_file_path)
