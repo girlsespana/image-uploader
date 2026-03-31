@@ -1,6 +1,5 @@
 import datetime
 import os
-import uuid
 
 import boto3
 
@@ -31,33 +30,16 @@ class S3FileUploader:
 
     @property
     def s3_path(self) -> str:
-        # Add UUID to filename to avoid cache issues
-        name, ext = os.path.splitext(self.filename)
-        unique_filename = f"{name}-{uuid.uuid4().hex[:8]}{ext}"
         return (
             f"uploads/model-images/"
-            f"{self.formatted_current_date}/{unique_filename}"
+            f"{self.formatted_current_date}/{self.filename}"
         )
 
     def upload(self):
-        import logging
-        logger = logging.getLogger(__name__)
-
-        logger.info(f"Uploading to S3: bucket={settings.PREMIUM_AWS_BUCKET_NAME}, path={self.s3_path}")
-
         try:
             with open(self.path, "rb") as f:
-                self.client.upload_fileobj(
-                    f,
-                    settings.PREMIUM_AWS_BUCKET_NAME,
-                    self.s3_path,
-                    ExtraArgs={'ACL': 'public-read'}
-                )
-            logger.info(f"S3 upload completed successfully")
+                self.client.upload_fileobj(f, settings.PREMIUM_AWS_BUCKET_NAME, self.s3_path)
         except Exception as e:
-            logger.error(f"S3 upload failed: {e}")
             raise S3UploaderError(str(e))
 
-        url = f'{settings.PREMIUM_AWS_S3_URL}{self.s3_path}'
-        logger.info(f"Returning URL: {url}")
-        return url
+        return f'{settings.PREMIUM_AWS_S3_URL}{self.s3_path}'
