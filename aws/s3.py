@@ -1,5 +1,6 @@
 import datetime
 import os
+import uuid
 
 import boto3
 
@@ -30,9 +31,12 @@ class S3FileUploader:
 
     @property
     def s3_path(self) -> str:
+        # Add UUID to filename to avoid cache issues
+        name, ext = os.path.splitext(self.filename)
+        unique_filename = f"{name}-{uuid.uuid4().hex[:8]}{ext}"
         return (
             f"uploads/model-images/"
-            f"{self.formatted_current_date}/{self.filename}"
+            f"{self.formatted_current_date}/{unique_filename}"
         )
 
     def upload(self):
