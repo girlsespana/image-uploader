@@ -40,10 +40,24 @@ class S3FileUploader:
         )
 
     def upload(self):
+        import logging
+        logger = logging.getLogger(__name__)
+
+        logger.info(f"Uploading to S3: bucket={settings.PREMIUM_AWS_BUCKET_NAME}, path={self.s3_path}")
+
         try:
             with open(self.path, "rb") as f:
-                self.client.upload_fileobj(f, settings.PREMIUM_AWS_BUCKET_NAME, self.s3_path)
+                self.client.upload_fileobj(
+                    f,
+                    settings.PREMIUM_AWS_BUCKET_NAME,
+                    self.s3_path,
+                    ExtraArgs={'ACL': 'public-read'}
+                )
+            logger.info(f"S3 upload completed successfully")
         except Exception as e:
+            logger.error(f"S3 upload failed: {e}")
             raise S3UploaderError(str(e))
 
-        return f'{settings.PREMIUM_AWS_S3_URL}{self.s3_path}'
+        url = f'{settings.PREMIUM_AWS_S3_URL}{self.s3_path}'
+        logger.info(f"Returning URL: {url}")
+        return url
