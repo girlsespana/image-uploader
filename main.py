@@ -38,6 +38,10 @@ def verify_token(token):
     url = settings.PREMIUM_GRAPHQL_URL
     query = """query Me { me { id } }"""
 
+    # Remove 'JWT ' prefix if already present
+    if token.startswith("JWT "):
+        token = token[4:]
+
     headers = {
         "Authorization": F"JWT {token}",
         "Content-Type": "application/json",
