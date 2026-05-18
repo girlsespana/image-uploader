@@ -1,8 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 import threading
+import settings
 
-
-WATERMARK_TEXT = "G I R L S E S . C O M"
+WATERMARK_TEXT = settings.WATERMARK_TEXT
 lock = threading.Lock()
 
 
